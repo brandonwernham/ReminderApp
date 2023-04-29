@@ -4,16 +4,26 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function App() {
   const [reminder, setReminder] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
+
+  const inputFocus = () => setIsFocused(true);
+  const inputBlur = () => setIsFocused(false);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Reminder App</Text>
         <TextInput 
-          style={styles.input} 
+          style={[
+            styles.input,
+            {borderColor: isFocused ? '#ef7c7a' : '#dce4f4'}
+          ]} 
           placeholder='Type a reminder here...'
+          placeholderTextColor='#3E547C'
           value={reminder}
-          onChangeText={(text) => setReminder(text)}    
+          onChangeText={(text) => setReminder(text)}
+          onFocus={inputFocus}
+          onBlur={inputBlur}
         />
       </View>
       <Text>{reminder}</Text>
@@ -37,12 +47,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 15,
     color: '#152542',
   },
   input: {
-    borderColor: 'gray',
-    width: '4',
-    height: '1',
+    borderWidth: 1,
+    width: '80%',
+    height: 40,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.03)',
   },
 });
