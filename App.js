@@ -1,14 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function App() {
+  const [reminder, setReminder] = useState('');
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Reminder App</Text>
+        <TextInput 
+          style={styles.input} 
+          placeholder='Type a reminder here...'
+          value={reminder}
+          onChangeText={(text) => setReminder(text)}    
+        />
       </View>
-      <Text>Test</Text>
+      <Text>{reminder}</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -31,5 +39,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     color: '#152542',
-  }
+  },
+  input: {
+    borderColor: 'gray',
+    width: '4',
+    height: '1',
+  },
 });
