@@ -33,6 +33,7 @@ export default function App() {
       text: reminder,
       date: date,
       time: time,
+      completed: false,
     };
   
     setReminders((prevReminders) => [...prevReminders, newReminder]);
@@ -43,15 +44,53 @@ export default function App() {
     setTimePickerVisibility(false);
   };
   
-  const Reminder = ({ id, text, date, time }) => (
-    <View style={[
-      styles.reminderContainer,
-      {borderColor: '#dce4f4'}
-    ]}>
-      <Text style={styles.reminderText}>{text}</Text>
-      <Text style={styles.reminderDateTime}>{date.toLocaleDateString()}, {time.toLocaleTimeString([], {hour: 'numeric', minute: 'numeric', hour12: true})}</Text>
-    </View>
-  );
+  const Reminder = ({ id, text, date, time, completed }) => {
+
+    const toggleCompleted = () => {
+      const updatedReminders = reminders.map((reminder) => {
+        if (reminder.id === id) {
+          return {
+            ...reminder,
+            completed: !reminder.completed,
+          };
+        } else {
+          return reminder;
+        }
+      });
+      setReminders(updatedReminders);
+    };
+
+    return (
+      <View style={[
+        styles.reminderContainer,
+        {borderColor: '#dce4f4'}
+      ]}>
+        <Text style={styles.reminderText}>{text}</Text>
+        <Text style={styles.reminderDateTime}>{date.toLocaleDateString()}, {time.toLocaleTimeString([], {hour: 'numeric', minute: 'numeric', hour12: true})}</Text>
+        <TouchableOpacity onPress={toggleCompleted}>
+          {completed ? (
+            <View 
+              style={[
+                styles.checkboxChecked,
+                {borderColor: '#dce4f4'}
+              ]}
+            >
+              <Text style={styles.checkboxCompletedText}>Completed</Text>
+            </View>
+          ) : (
+            <View 
+              style={[
+                styles.checkbox,
+                {borderColor: '#dce4f4'}
+              ]}
+            >
+              <Text style={styles.checkboxText}>Not Completed</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
+    );
+  };
   
   return (
     <View style={styles.container}>
@@ -213,5 +252,31 @@ const styles = StyleSheet.create({
   },
   reminderDateTime: {
     color: '#3E547C',
-  }
+  },
+  checkbox: {
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderRadius: 20,
+    marginTop: 10,
+    height: 30,
+    width: 150,
+    padding: 5,
+    alignItems: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: '#ef7c7a',
+    borderWidth: 1,
+    borderRadius: 20,
+    marginTop: 10,
+    height: 30,
+    width: 150,
+    padding: 5,
+    alignItems: 'center',
+  },
+  checkboxText: {
+    color: '#3E547C',
+  },
+  checkboxCompletedText: {
+    color: 'white',
+  },
 });

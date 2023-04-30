@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-community/checkbox": "^0.5.15",
     "@react-native-community/datetimepicker": "6.7.3",
     "expo": "~48.0.15",
     "expo-splash-screen": "~0.18.2",
