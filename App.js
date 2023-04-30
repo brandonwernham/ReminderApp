@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   },
   remindersList: {
     backgroundColor: 'rgba(0, 0, 0, 0.03)',
-    width: 400,
+    width: 300,
     height: 'auto',
     marginTop: 15,
     marginBottom: 30,
