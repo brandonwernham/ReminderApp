@@ -2,10 +2,17 @@
   "expo": {
     "name": "ReminderApp",
     "slug": "ReminderApp",
+    "privacy": "public",
+    "description": "Coding challenge completed by Brandon Wernham.",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "cecc1d99-a040-4da9-a41a-9ca9d2dcf7fd"
+      }
+    }
   },
   "name": "ReminderApp"
 }
