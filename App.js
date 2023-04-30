@@ -1,18 +1,34 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View, FlatList, TouchableOpacity } from 'react-native';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export default function App() {
   const [reminder, setReminder] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [date, setDate] = useState(null);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [time, setTime] = useState(null);
+  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+  const [reminders, setReminders] = useState([]);
 
   const inputFocus = () => setIsFocused(true);
   const inputBlur = () => setIsFocused(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const showTimePicker = () => {
+    setTimePickerVisibility(true);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Reminder App</Text>
+
+        {/* Typing the reminder */}
         <TextInput 
           style={[
             styles.input,
@@ -25,6 +41,26 @@ export default function App() {
           onFocus={inputFocus}
           onBlur={inputBlur}
         />
+
+        {/* Choosing the date */}
+        <TouchableOpacity style={styles.datePickerButton} onPress={showDatePicker}>
+          <Text style={styles.datePickerButtonText}>
+            {date !== null ? date.toLocaleDateString() : 'Choose a date'}
+          </Text>
+        </TouchableOpacity>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={(selectedDate) => {
+            setDate(selectedDate);
+            setDatePickerVisibility(false);
+          }}
+          onCancel={() => setDatePickerVisibility(false)}
+        />
+
+        {/* Choosing the time */}
+        
+        
       </View>
       <Text>{reminder}</Text>
       <StatusBar style="auto" />
@@ -57,5 +93,18 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     backgroundColor: 'rgba(0, 0, 0, 0.03)',
+  },
+  datePickerButton: {
+    backgroundColor: '#ef7c7a',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  datePickerButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
