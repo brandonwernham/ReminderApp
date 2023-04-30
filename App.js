@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, View, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export default function App() {
@@ -161,7 +161,6 @@ export default function App() {
           ]}
         />
       </View>
-      
       <StatusBar style="auto" />
     </View>
   );
@@ -175,10 +174,11 @@ const styles = StyleSheet.create({
     justifyContent: 'top',
   },
   header: {
+    flex: 1,
     width: '100%',
     alignItems: 'center',
     marginBottom: 30,
-    marginTop: 70
+    marginTop: 60
   },
   title: {
     fontSize: 35,
@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     marginTop: 15,
+    marginBottom: 10,
     alignItems: 'center',
     width: 300,
     width: 300,
@@ -233,15 +234,19 @@ const styles = StyleSheet.create({
   remindersList: {
     backgroundColor: 'rgba(0, 0, 0, 0.03)',
     width: 400,
-    height: 500,
+    height: 'auto',
     marginTop: 15,
+    marginBottom: 30,
     borderRadius: 8,
     borderWidth: 1,
+    paddingBottom: 20,
+    paddingTop: 20,
   },
   reminderContainer: {
     marginLeft: 15,
     marginRight: 15,
-    marginTop: 15,
+    marginTop: 7,
+    marginBottom: 7,
     backgroundColor: 'white',
     borderRadius: 8,
     padding: 15,
