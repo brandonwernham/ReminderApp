@@ -34,7 +34,7 @@ export default function App() {
             styles.input,
             {borderColor: isFocused ? '#ef7c7a' : '#dce4f4'}
           ]} 
-          placeholder='Type a reminder here...'
+          placeholder='Type a reminder... (ex. hire Brandon Wernham)'
           placeholderTextColor='#3E547C'
           value={reminder}
           onChangeText={(text) => setReminder(text)}
@@ -59,10 +59,28 @@ export default function App() {
         />
 
         {/* Choosing the time */}
+        <TouchableOpacity style={styles.datePickerButton} onPress={showTimePicker}>
+          <Text style={styles.datePickerButtonText}>
+          {time !== null ? time.toLocaleTimeString([], {hour: 'numeric', minute: 'numeric', hour12: true}) : 'Choose a time'}
+          </Text>
+        </TouchableOpacity>
+        <DateTimePickerModal
+          isVisible={isTimePickerVisible}
+          mode="time"
+          onConfirm={(selectedTime) => {
+            setTime(selectedTime);
+            setTimePickerVisibility(false);
+          }}
+          onCancel={() => setTimePickerVisibility(false)}
+        />
+
+        {/* Create the reminder */}
         
-        
+
       </View>
       <Text>{reminder}</Text>
+      <Text>{date !== null ? date.toLocaleDateString() : 'No Date Selected'}</Text>
+      <Text>{time !== null ? time.toLocaleTimeString([], {hour: 'numeric', minute: 'numeric', hour12: true}) : 'No Time Selected'}</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -95,12 +113,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.03)',
   },
   datePickerButton: {
-    backgroundColor: '#ef7c7a',
+    backgroundColor: '#1495cd',
     borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 7,
     marginTop: 10,
     alignItems: 'center',
+    width: 200,
   },
   datePickerButtonText: {
     color: '#fff',
