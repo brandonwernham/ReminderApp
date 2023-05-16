@@ -9,7 +9,11 @@ const reminderSlice = createSlice({
   initialState,
   reducers: {
     addReminder: (state, action) => {
-      state.reminders.push(action.payload);
+        state.reminders = state.reminders.concat(action.payload);
+    },
+    deleteReminder: (state, action) => {
+        const idToDelete = action.payload;
+        state.reminders = state.reminders.filter((reminder) => reminder.id !== idToDelete);
     },
     toggleCompleted: (state, action) => {
       const { id } = action.payload;
@@ -21,7 +25,7 @@ const reminderSlice = createSlice({
   },
 });
 
-export const { addReminder, toggleCompleted } = reminderSlice.actions;
+export const { addReminder, deleteReminder, toggleCompleted } = reminderSlice.actions;
 
 const reducer = reminderSlice.reducer;
 

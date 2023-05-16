@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { connect } from 'react-redux';
-import { addReminder, toggleCompleted } from './redux/store';
+import { addReminder, deleteReminder, toggleCompleted } from './redux/store';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 
-const ReminderApp = ({ reminders, addReminder, toggleCompleted }) => {
+const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted }) => {
     const [reminder, setReminder] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const [date, setDate] = useState(null);
@@ -25,30 +26,34 @@ const ReminderApp = ({ reminders, addReminder, toggleCompleted }) => {
     };
   
     const createReminder = () => {
-      if (!reminder || !date || !time) {
-        return;
-      }
-  
-      const newReminder = {
-        id: Date.now().toString(),
-        text: reminder,
-        date: date.toISOString(),
-        time: time.toISOString(),
-        completed: false,
-      };
-  
-      setReminder('');
-      setDate(null);
-      setTime(null);
-      setDatePickerVisibility(false);
-      setTimePickerVisibility(false);
-  
-      addReminder(newReminder);
+        if (!reminder || !date || !time) {
+            return;
+        }
+    
+        const newReminder = {
+            id: Date.now().toString(),
+            text: reminder,
+            date: date.toISOString(),
+            time: time.toISOString(),
+            completed: false,
+        };
+    
+        setReminder('');
+        setDate(null);
+        setTime(null);
+        setDatePickerVisibility(false);
+        setTimePickerVisibility(false);
+    
+        addReminder(newReminder);
     };
   
     const Reminder = ({ id, text, date, time, completed }) => {
         const toggleReminderCompleted = () => {
             toggleCompleted({ id });
+        };
+
+        const deleteFromReminders = () => {
+            deleteReminder(id);
         };
 
         const formattedDate = new Date(date).toLocaleDateString();
@@ -58,36 +63,45 @@ const ReminderApp = ({ reminders, addReminder, toggleCompleted }) => {
             hour12: true
         });
   
-      return (
-        <View style={[
-            styles.reminderContainer,
-            {borderColor: '#dce4f4'}
-        ]}>
-          <Text style={styles.reminderText}>{text}</Text>
-          <Text style={styles.reminderDateTime}>{formattedDate}, {formattedTime}</Text>
-          <TouchableOpacity onPress={toggleReminderCompleted}>
-          {completed ? (
-            <View 
-              style={[
-                styles.checkboxChecked,
+        return (
+            <View style={[
+                styles.reminderContainer,
                 {borderColor: '#dce4f4'}
-              ]}
-            >
-              <Text style={styles.checkboxCompletedText}>Completed</Text>
+            ]}>
+                <View style={styles.textAndDelete}>
+                    <Text style={styles.reminderText}>{text}</Text>
+                    <TouchableOpacity onPress={deleteFromReminders} style={styles.deleteButton}>
+                        <AntDesignIcon
+                            name='delete'
+                            size={30}
+                            color='#152542' 
+                        />
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.reminderDateTime}>{formattedDate}, {formattedTime}</Text>
+                <TouchableOpacity onPress={toggleReminderCompleted}>
+                    {completed ? (
+                        <View 
+                        style={[
+                            styles.checkboxChecked,
+                            {borderColor: '#dce4f4'}
+                        ]}
+                        >
+                        <Text style={styles.checkboxCompletedText}>Completed</Text>
+                        </View>
+                    ) : (
+                        <View 
+                        style={[
+                            styles.checkbox,
+                            {borderColor: '#dce4f4'}
+                        ]}
+                        >
+                        <Text style={styles.checkboxText}>Not Completed</Text>
+                        </View>
+                    )}
+                </TouchableOpacity>
             </View>
-          ) : (
-            <View 
-              style={[
-                styles.checkbox,
-                {borderColor: '#dce4f4'}
-              ]}
-            >
-              <Text style={styles.checkboxText}>Not Completed</Text>
-            </View>
-          )}
-          </TouchableOpacity>
-        </View>
-      );
+        );
     };
   
   return (
@@ -173,6 +187,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     addReminder,
+    deleteReminder,
     toggleCompleted,
 };
 
@@ -269,8 +284,16 @@ const styles = StyleSheet.create({
     padding: 15,
     borderWidth: 1,
   },
+  textAndDelete: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
   reminderText: {
     color: '#3E547C',
+  },
+  deleteButton: {
+    position: 'absolute',
+    right: 2,
   },
   reminderDateTime: {
     color: '#3E547C',
