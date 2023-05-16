@@ -25,15 +25,23 @@ const reminderSlice = createSlice({
     },
     setImportant: (state, action) => {
         const { id } = action.payload;
-        const reminderIndex = state.reminders.findIndex((item) => item.id === id);
         const reminder = state.reminders.find((item) => item.id === id);
+        const reminderIndex = state.reminders.findIndex((item) => item.id === id);
 
         if (reminder) {
             reminder.important = !reminder.important;
-        }
-        if (reminderIndex !== -1) {
-            const [removedReminder] = state.reminders.splice(reminderIndex, 1);
-            state.reminders.unshift(removedReminder);
+
+            if (!reminder.important) {
+                if (reminderIndex !== -1) {
+                    const [removedReminder] = state.reminders.splice(reminderIndex, 1);
+                    state.reminders.push(removedReminder);
+                }
+            } else {
+                if (reminderIndex !== -1) {
+                    const [removedReminder] = state.reminders.splice(reminderIndex, 1);
+                    state.reminders.unshift(removedReminder);
+                }
+            }
         }
     },
   },
