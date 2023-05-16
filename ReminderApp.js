@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, TextInput, View, FlatList, TouchableOpacity } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { connect } from 'react-redux';
 import { addReminder, deleteReminder, toggleCompleted, setImportant } from './redux/store';
@@ -13,23 +13,27 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted, 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [time, setTime] = useState(null);
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
-  
+
     const inputFocus = () => setIsFocused(true);
     const inputBlur = () => setIsFocused(false);
-  
+
+    // Opens date picker for IOS
     const showDatePicker = () => {
-      setDatePickerVisibility(true);
+        setDatePickerVisibility(true);
     };
-  
+
+    // Opens time picker for IOS
     const showTimePicker = () => {
-      setTimePickerVisibility(true);
+        setTimePickerVisibility(true);
     };
-  
+
     const createReminder = () => {
+        // Values need to be set to create reminder
         if (!reminder || !date || !time) {
             return;
         }
-    
+
+        // Adding values to the reminder
         const newReminder = {
             id: Date.now().toString(),
             text: reminder,
@@ -37,16 +41,17 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted, 
             time: time.toISOString(),
             completed: false,
         };
-    
+
         setReminder('');
         setDate(null);
         setTime(null);
         setDatePickerVisibility(false);
         setTimePickerVisibility(false);
-    
+
+        // Adding the reminder to the state
         addReminder(newReminder);
     };
-  
+
     const Reminder = ({ id, text, date, time, completed, important }) => {
         const toggleReminderCompleted = () => {
             toggleCompleted({ id });
@@ -60,17 +65,19 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted, 
             setImportant({ id });
         };
 
+        // Prevents date from showing up as unrecognizable format
         const formattedDate = new Date(date).toLocaleDateString();
         const formattedTime = new Date(time).toLocaleTimeString([], {
             hour: 'numeric',
             minute: 'numeric',
             hour12: true
         });
-  
+
+        // Structure of each individual reminder
         return (
             <View style={[
                 styles.reminderContainer,
-                {borderColor: '#dce4f4'}
+                { borderColor: '#dce4f4' }
             ]}>
                 <View style={styles.textAndDelete}>
                     <Text style={styles.reminderText}>{text}</Text>
@@ -78,7 +85,7 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted, 
                         <AntDesignIcon
                             name='delete'
                             size={30}
-                            color='#152542' 
+                            color='#152542'
                         />
                     </TouchableOpacity>
                 </View>
@@ -87,22 +94,22 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted, 
                 {/* Completed or not completed */}
                 <TouchableOpacity onPress={toggleReminderCompleted}>
                     {completed ? (
-                        <View 
-                        style={[
-                            styles.checkboxChecked,
-                            {borderColor: '#dce4f4'}
-                        ]}
+                        <View
+                            style={[
+                                styles.checkboxChecked,
+                                { borderColor: '#dce4f4' }
+                            ]}
                         >
-                        <Text style={styles.checkboxCompletedText}>Completed</Text>
+                            <Text style={styles.checkboxCompletedText}>Completed</Text>
                         </View>
                     ) : (
-                        <View 
-                        style={[
-                            styles.checkbox,
-                            {borderColor: '#dce4f4'}
-                        ]}
+                        <View
+                            style={[
+                                styles.checkbox,
+                                { borderColor: '#dce4f4' }
+                            ]}
                         >
-                        <Text style={styles.checkboxText}>Not Completed</Text>
+                            <Text style={styles.checkboxText}>Not Completed</Text>
                         </View>
                     )}
                 </TouchableOpacity>
@@ -110,110 +117,118 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted, 
                 {/* Important or not important */}
                 <TouchableOpacity onPress={setReminderImportant}>
                     {important ? (
-                        <View 
-                        style={[
-                            styles.checkboxChecked,
-                            {borderColor: '#dce4f4'}
-                        ]}
+                        <View
+                            style={[
+                                styles.checkboxChecked,
+                                { borderColor: '#dce4f4' }
+                            ]}
                         >
-                        <Text style={styles.checkboxCompletedText}>IMPORTANT</Text>
+                            <Text style={styles.checkboxCompletedText}>IMPORTANT</Text>
                         </View>
                     ) : (
-                        <View 
-                        style={[
-                            styles.checkbox,
-                            {borderColor: '#dce4f4'}
-                        ]}
+                        <View
+                            style={[
+                                styles.checkbox,
+                                { borderColor: '#dce4f4' }
+                            ]}
                         >
-                        <Text style={styles.checkboxText}>Set high importance</Text>
+                            <Text style={styles.checkboxText}>Set high importance</Text>
                         </View>
                     )}
                 </TouchableOpacity>
             </View>
         );
     };
-  
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Reminder App</Text>
-  
-        {/* Typing the reminder */}
-        <TextInput 
-          style={[
-            styles.input,
-            {borderColor: isFocused ? '#ef7c7a' : '#dce4f4'}
-          ]} 
-          placeholder='Type a reminder... (ex. hire Brandon Wernham)'
-          placeholderTextColor='#3E547C'
-          value={reminder}
-          onChangeText={(text) => setReminder(text)}
-          onFocus={inputFocus}
-          onBlur={inputBlur}
-        />
-  
-        <View style={styles.dateAndTimeView}>
-          {/* Choosing the date */}
-          <TouchableOpacity style={styles.datePickerButton} onPress={showDatePicker}>
-            <Text style={styles.datePickerButtonText}>
-              {date !== null ? date.toLocaleDateString() : 'Choose a date'}
-            </Text>
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={isDatePickerVisible}
-            mode="date"
-            onConfirm={(selectedDate) => {
-              setDate(selectedDate);
-              setDatePickerVisibility(false);
-            }}
-            onCancel={() => setDatePickerVisibility(false)}
-          />
-    
-          {/* Choosing the time */}
-          <TouchableOpacity style={styles.datePickerButton} onPress={showTimePicker}>
-            <Text style={styles.datePickerButtonText}>
-            {time !== null ? time.toLocaleTimeString([], {hour: 'numeric', minute: 'numeric', hour12: true}) : 'Choose a time'}
-            </Text>
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={isTimePickerVisible}
-            mode="time"
-            onConfirm={(selectedTime) => {
-              setTime(selectedTime);
-              setTimePickerVisibility(false);
-            }}
-            onCancel={() => setTimePickerVisibility(false)}
-          />
+
+    // Main structure
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.title}>Reminder App</Text>
+
+                {/* Typing the reminder */}
+                <TextInput
+                    style={[
+                        styles.input,
+                        { borderColor: isFocused ? '#ef7c7a' : '#dce4f4' }
+                    ]}
+                    placeholder='Type a reminder... (ex. hire Brandon Wernham)'
+                    placeholderTextColor='#3E547C'
+                    value={reminder}
+                    onChangeText={(text) => setReminder(text)}
+                    onFocus={inputFocus}
+                    onBlur={inputBlur}
+                />
+
+                <View style={styles.dateAndTimeView}>
+                    {/* Choosing the date */}
+                    <TouchableOpacity style={styles.datePickerButton} onPress={showDatePicker}>
+                        <Text style={styles.datePickerButtonText}>
+                            {date !== null ? date.toLocaleDateString() : 'Choose a date'}
+                        </Text>
+                    </TouchableOpacity>
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="date"
+                        onConfirm={(selectedDate) => {
+                            setDate(selectedDate);
+                            setDatePickerVisibility(false);
+                        }}
+                        onCancel={() => setDatePickerVisibility(false)}
+                    />
+
+                    {/* Choosing the time */}
+                    <TouchableOpacity style={styles.datePickerButton} onPress={showTimePicker}>
+                        <Text style={styles.datePickerButtonText}>
+                            {time !== null ? time.toLocaleTimeString([], { hour: 'numeric', minute: 'numeric', hour12: true }) : 'Choose a time'}
+                        </Text>
+                    </TouchableOpacity>
+                    <DateTimePickerModal
+                        isVisible={isTimePickerVisible}
+                        mode="time"
+                        onConfirm={(selectedTime) => {
+                            setTime(selectedTime);
+                            setTimePickerVisibility(false);
+                        }}
+                        onCancel={() => setTimePickerVisibility(false)}
+                    />
+                </View>
+
+
+                {/* Create the reminder */}
+                <TouchableOpacity style={styles.createReminderButton} onPress={createReminder}>
+                    <Text style={styles.createReminderButtonText}>
+                        Create Reminder
+                    </Text>
+                </TouchableOpacity>
+
+                {/* Display the reminders */}
+                {reminders.length > 0 ? (
+                    <FlatList
+                        data={reminders}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => <Reminder {...item} />}
+                        contentContainerStyle={[
+                            styles.remindersList,
+                            { borderColor: '#ef7c7a' }
+                        ]}
+                    />
+                ) :
+                    <Text style={styles.noRemindersText}>No Reminders</Text>
+                }
+
+            </View>
+            <StatusBar style="auto" />
         </View>
-        
-  
-        {/* Create the reminder */}
-        <TouchableOpacity style={styles.createReminderButton} onPress={createReminder}>
-          <Text style={styles.createReminderButtonText}>
-            Create Reminder
-          </Text>
-        </TouchableOpacity>
-  
-        {/* Display the reminders */}
-        <FlatList
-          data={reminders}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <Reminder {...item} />}
-          contentContainerStyle={[
-            styles.remindersList,
-            {borderColor: '#ef7c7a'}
-          ]}
-        />
-      </View>
-      <StatusBar style="auto" />
-    </View>
-  );
+    );
 };
 
+// Connects Redux store state to reminders field
 const mapStateToProps = (state) => ({
     reminders: state.reminders,
 });
 
+// Maps all the actions to the props
 const mapDispatchToProps = {
     addReminder,
     deleteReminder,
@@ -221,137 +236,143 @@ const mapDispatchToProps = {
     setImportant,
 };
 
+// Connects the Redux store to ReminderApp
 export default connect(mapStateToProps, mapDispatchToProps)(ReminderApp);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'top',
-  },
-  header: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 30,
-    marginTop: 40,
-  },
-  title: {
-    fontSize: 35,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    color: '#152542',
-  },
-  input: {
-    borderWidth: 1,
-    width: 350,
-    height: 50,
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
-  },
-  dateAndTimeView: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  datePickerButton: {
-    backgroundColor: '#1495cd',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    marginTop: 10,
-    alignItems: 'center',
-    width: 173,
-    marginLeft: 2,
-    marginRight: 2,
-  },
-  datePickerButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  createReminderButton: {
-    backgroundColor: '#ef7c7a',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    marginTop: 10,
-    marginBottom: 10,
-    alignItems: 'center',
-    width: 350,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 3,
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'top',
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-  },
-  createReminderButtonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  remindersList: {
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
-    width: 350,
-    height: 'auto',
-    marginTop: 15,
-    marginBottom: 30,
-    borderRadius: 8,
-    borderWidth: 1,
-    paddingBottom: 20,
-    paddingTop: 20,
-  },
-  reminderContainer: {
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 7,
-    marginBottom: 7,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 15,
-    borderWidth: 1,
-  },
-  textAndDelete: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  reminderText: {
-    color: '#3E547C',
-  },
-  deleteButton: {
-    position: 'absolute',
-    right: 2,
-  },
-  reminderDateTime: {
-    color: '#3E547C',
-  },
-  checkbox: {
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderRadius: 20,
-    marginTop: 10,
-    height: 30,
-    width: 150,
-    padding: 5,
-    alignItems: 'center',
-  },
-  checkboxChecked: {
-    backgroundColor: '#ef7c7a',
-    borderWidth: 1,
-    borderRadius: 20,
-    marginTop: 10,
-    height: 30,
-    width: 150,
-    padding: 5,
-    alignItems: 'center',
-  },
-  checkboxText: {
-    color: '#3E547C',
-  },
-  checkboxCompletedText: {
-    color: 'white',
-  },
+    header: {
+        flex: 1,
+        width: '100%',
+        alignItems: 'center',
+        marginBottom: 30,
+        marginTop: 40,
+    },
+    title: {
+        fontSize: 35,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: '#152542',
+    },
+    input: {
+        borderWidth: 1,
+        width: 350,
+        height: 50,
+        padding: 10,
+        borderRadius: 8,
+        backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    },
+    dateAndTimeView: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    datePickerButton: {
+        backgroundColor: '#1495cd',
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        paddingVertical: 7,
+        marginTop: 10,
+        alignItems: 'center',
+        width: 173,
+        marginLeft: 2,
+        marginRight: 2,
+    },
+    datePickerButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    createReminderButton: {
+        backgroundColor: '#ef7c7a',
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        marginTop: 10,
+        marginBottom: 10,
+        alignItems: 'center',
+        width: 350,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+    },
+    createReminderButtonText: {
+        color: '#fff',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    noRemindersText: {
+        fontSize: 25,
+        color: '#152542',
+        marginTop: 50,
+    },
+    remindersList: {
+        backgroundColor: 'rgba(0, 0, 0, 0.03)',
+        width: 350,
+        height: 'auto',
+        marginTop: 15,
+        marginBottom: 30,
+        borderRadius: 8,
+        borderWidth: 1,
+        paddingBottom: 20,
+        paddingTop: 20,
+    },
+    reminderContainer: {
+        marginLeft: 15,
+        marginRight: 15,
+        marginTop: 7,
+        marginBottom: 7,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        padding: 15,
+        borderWidth: 1,
+    },
+    textAndDelete: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    reminderText: {
+        color: '#3E547C',
+    },
+    deleteButton: {
+        position: 'absolute',
+        right: 2,
+    },
+    reminderDateTime: {
+        color: '#3E547C',
+    },
+    checkbox: {
+        backgroundColor: "white",
+        borderWidth: 1,
+        borderRadius: 20,
+        marginTop: 10,
+        height: 30,
+        width: 150,
+        padding: 5,
+        alignItems: 'center',
+    },
+    checkboxChecked: {
+        backgroundColor: '#ef7c7a',
+        borderWidth: 1,
+        borderRadius: 20,
+        marginTop: 10,
+        height: 30,
+        width: 150,
+        padding: 5,
+        alignItems: 'center',
+    },
+    checkboxText: {
+        color: '#3E547C',
+    },
+    checkboxCompletedText: {
+        color: 'white',
+    },
 });
