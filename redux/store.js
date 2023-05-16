@@ -18,14 +18,28 @@ const reminderSlice = createSlice({
     toggleCompleted: (state, action) => {
       const { id } = action.payload;
       const reminder = state.reminders.find((item) => item.id === id);
+
       if (reminder) {
         reminder.completed = !reminder.completed;
       }
     },
+    setImportant: (state, action) => {
+        const { id } = action.payload;
+        const reminderIndex = state.reminders.findIndex((item) => item.id === id);
+        const reminder = state.reminders.find((item) => item.id === id);
+
+        if (reminder) {
+            reminder.important = !reminder.important;
+        }
+        if (reminderIndex !== -1) {
+            const [removedReminder] = state.reminders.splice(reminderIndex, 1);
+            state.reminders.unshift(removedReminder);
+        }
+    },
   },
 });
 
-export const { addReminder, deleteReminder, toggleCompleted } = reminderSlice.actions;
+export const { addReminder, deleteReminder, toggleCompleted, setImportant } = reminderSlice.actions;
 
 const reducer = reminderSlice.reducer;
 

@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { connect } from 'react-redux';
-import { addReminder, deleteReminder, toggleCompleted } from './redux/store';
+import { addReminder, deleteReminder, toggleCompleted, setImportant } from './redux/store';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 
-const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted }) => {
+const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted, setImportant }) => {
     const [reminder, setReminder] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const [date, setDate] = useState(null);
@@ -47,13 +47,17 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted }
         addReminder(newReminder);
     };
   
-    const Reminder = ({ id, text, date, time, completed }) => {
+    const Reminder = ({ id, text, date, time, completed, important }) => {
         const toggleReminderCompleted = () => {
             toggleCompleted({ id });
         };
 
         const deleteFromReminders = () => {
             deleteReminder(id);
+        };
+
+        const setReminderImportant = () => {
+            setImportant({ id });
         };
 
         const formattedDate = new Date(date).toLocaleDateString();
@@ -79,6 +83,8 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted }
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.reminderDateTime}>{formattedDate}, {formattedTime}</Text>
+
+                {/* Completed or not completed */}
                 <TouchableOpacity onPress={toggleReminderCompleted}>
                     {completed ? (
                         <View 
@@ -97,6 +103,29 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted }
                         ]}
                         >
                         <Text style={styles.checkboxText}>Not Completed</Text>
+                        </View>
+                    )}
+                </TouchableOpacity>
+
+                {/* Important or not important */}
+                <TouchableOpacity onPress={setReminderImportant}>
+                    {important ? (
+                        <View 
+                        style={[
+                            styles.checkboxChecked,
+                            {borderColor: '#dce4f4'}
+                        ]}
+                        >
+                        <Text style={styles.checkboxCompletedText}>IMPORTANT</Text>
+                        </View>
+                    ) : (
+                        <View 
+                        style={[
+                            styles.checkbox,
+                            {borderColor: '#dce4f4'}
+                        ]}
+                        >
+                        <Text style={styles.checkboxText}>Set high importance</Text>
                         </View>
                     )}
                 </TouchableOpacity>
@@ -189,6 +218,7 @@ const mapDispatchToProps = {
     addReminder,
     deleteReminder,
     toggleCompleted,
+    setImportant,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReminderApp);
