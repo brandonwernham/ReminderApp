@@ -1,5 +1,4 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-
 const initialState = {
     reminders: [],
 };
