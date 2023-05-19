@@ -18,7 +18,7 @@ const reminderSlice = createSlice({
             state.reminders = state.reminders.filter((item) => item.id !== id);
         },
         toggleCompleted: (state, action) => {
-            const { id } = action.payload;
+            const id = action.payload;
             const reminder = state.reminders.find((item) => item.id === id);
 
             // Inverts the state of completed
@@ -27,7 +27,7 @@ const reminderSlice = createSlice({
             }
         },
         setImportant: (state, action) => {
-            const { id } = action.payload;
+            const id = action.payload;
             const reminder = state.reminders.find((item) => item.id === id);
             const reminderIndex = state.reminders.findIndex((item) => item.id === id);
 

@@ -54,16 +54,16 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted, 
     };
 
     const Reminder = ({ id, text, date, time, completed, important }) => {
-        const toggleReminderCompleted = () => {
-            toggleCompleted({ id });
-        };
-
         const deleteFromReminders = () => {
             deleteReminder(id);
         };
 
+        const toggleReminderCompleted = () => {
+            toggleCompleted(id);
+        };
+
         const setReminderImportant = () => {
-            setImportant({ id });
+            setImportant(id);
         };
 
         // Prevents date from showing up as unrecognizable format
