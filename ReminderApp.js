@@ -40,6 +40,7 @@ const ReminderApp = ({ reminders, addReminder, deleteReminder, toggleCompleted, 
             date: date.toISOString(),
             time: time.toISOString(),
             completed: false,
+            important: false,
         };
 
         setReminder('');
