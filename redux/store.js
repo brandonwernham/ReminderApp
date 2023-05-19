@@ -13,9 +13,9 @@ const reminderSlice = createSlice({
             state.reminders = state.reminders.concat(action.payload);
         },
         deleteReminder: (state, action) => {
-            const idToDelete = action.payload;
+            const id = action.payload;
             // Filters the reminder to delete
-            state.reminders = state.reminders.filter((reminder) => reminder.id !== idToDelete);
+            state.reminders = state.reminders.filter((item) => item.id !== id);
         },
         toggleCompleted: (state, action) => {
             const { id } = action.payload;
